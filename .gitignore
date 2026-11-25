@@ -1,0 +1,36 @@
+# 4D data, logs and derived files
+[dD][aA][tT][aA]/
+Logs/
+DerivedData/
+Libraries/
+userPreferences.*/
+
+# Uncomment to ignore the trash
+# Project/Trash
+
+# Local dependency resolution (the Dependency manager download mode creates these)
+.local-components/
+environment4d.json
+userPreferences.*
+
+# Test and probe artefacts (see README: harness output)
+demo-test-*.json
+demo-ui-*.json
+demo-ui-*.json.*
+probe-out.json
+probe-ui.txt
+chrome_debug.log
+.probe-mini/
+
+# System files
+.DS_Store
+ehthumbs.db
+Thumbs.db
+
+# Tools provisioned by the 4D skills (see the 4dtools skill)
+/tools/4dcatalog/
+/tools/4dform/
+/tools/4dlsp/
+/tools/4dlang/
+/tools/4dcli/
+/tools/4dform/

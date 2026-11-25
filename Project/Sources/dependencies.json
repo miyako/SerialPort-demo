@@ -1,0 +1,9 @@
+{
+	"version": 2100,
+	"dependencies": {
+		"SerialPort": {
+			"github": "miyako/SerialPort",
+			"version": "0.1.2"
+		}
+	}
+}

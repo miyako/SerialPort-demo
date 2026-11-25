@@ -1,0 +1,617 @@
+{
+	"$4d": {
+		"version": "1",
+		"kind": "form"
+	},
+	"windowSizingX": "fixed",
+	"windowSizingY": "fixed",
+	"windowMinWidth": 1000,
+	"windowMinHeight": 740,
+	"windowMaxWidth": 1200,
+	"windowMaxHeight": 900,
+	"width": 1000,
+	"height": 740,
+	"rightMargin": 16,
+	"bottomMargin": 20,
+	"events": [
+		"onLoad",
+		"onUnload",
+		"onTimer",
+		"onClick"
+	],
+	"windowTitle": "SerialPort demo",
+	"destination": "detailScreen",
+	"method": "method.4dm",
+	"pages": [
+		{
+			"objects": {}
+		},
+		{
+			"objects": {
+				"hdrTitle": {
+					"type": "text",
+					"text": "SerialPort — a CLI-backed 4D component, driven by an owner worker",
+					"top": 12,
+					"left": 16,
+					"width": 760,
+					"height": 24,
+					"fontSize": 18,
+					"fontWeight": "bold"
+				},
+				"subTitle": {
+					"type": "text",
+					"text": "A PTY simulator stands in for the missing serial hardware. Nothing here needs a real device.",
+					"top": 40,
+					"left": 16,
+					"width": 760,
+					"height": 18,
+					"fontSize": 12
+				},
+				"statusText": {
+					"type": "input",
+					"dataSource": "Form.statusText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"hideFocusRing": true,
+					"borderStyle": "none",
+					"top": 62,
+					"left": 16,
+					"width": 640,
+					"height": 20
+				},
+				"pendingText": {
+					"type": "input",
+					"dataSource": "Form.pendingText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"hideFocusRing": true,
+					"borderStyle": "none",
+					"top": 62,
+					"left": 672,
+					"width": 312,
+					"height": 20
+				},
+				"statsText": {
+					"type": "input",
+					"dataSource": "Form.statsText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"hideFocusRing": true,
+					"borderStyle": "none",
+					"top": 84,
+					"left": 16,
+					"width": 640,
+					"height": 20
+				},
+				"quit": {
+					"type": "button",
+					"text": "Quit",
+					"top": 12,
+					"left": 900,
+					"width": 84,
+					"height": 24
+				},
+				"grpSession": {
+					"type": "groupBox",
+					"text": "Session",
+					"top": 112,
+					"left": 16,
+					"width": 424,
+					"height": 84
+				},
+				"start": {
+					"type": "button",
+					"text": "Start session",
+					"top": 136,
+					"left": 32,
+					"width": 120,
+					"height": 24
+				},
+				"shutdown": {
+					"type": "button",
+					"text": "Shutdown",
+					"top": 136,
+					"left": 160,
+					"width": 120,
+					"height": 24
+				},
+				"terminate": {
+					"type": "button",
+					"text": "Terminate",
+					"top": 136,
+					"left": 288,
+					"width": 120,
+					"height": 24
+				},
+				"grpPorts": {
+					"type": "groupBox",
+					"text": "Ports and connection",
+					"top": 204,
+					"left": 16,
+					"width": 424,
+					"height": 196
+				},
+				"portList": {
+					"type": "listbox",
+					"listboxType": "collection",
+					"dataSource": "Form.ports",
+					"resizingMode": "legacy",
+					"verticalAlign": "middle",
+					"rowHeight": "20px",
+					"top": 228,
+					"left": 32,
+					"width": 264,
+					"height": 72,
+					"columns": [
+						{
+							"name": "path",
+							"dataSource": "This.path",
+							"width": 264,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "pathHeader",
+								"text": "Path"
+							},
+							"footer": {
+								"name": "pathFooter",
+								"truncateMode": "none"
+							}
+						}
+					]
+				},
+				"deviceStart": {
+					"type": "button",
+					"text": "Start device",
+					"top": 228,
+					"left": 304,
+					"width": 120,
+					"height": 24
+				},
+				"deviceStop": {
+					"type": "button",
+					"text": "Stop device",
+					"top": 256,
+					"left": 304,
+					"width": 120,
+					"height": 24
+				},
+				"deviceText": {
+					"type": "input",
+					"dataSource": "Form.deviceText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"hideFocusRing": true,
+					"borderStyle": "none",
+					"top": 284,
+					"left": 304,
+					"width": 120,
+					"height": 20
+				},
+				"inPath": {
+					"type": "input",
+					"dataSource": "Form.pathInput",
+					"dataSourceTypeHint": "text",
+					"top": 312,
+					"left": 32,
+					"width": 264,
+					"height": 22
+				},
+				"open": {
+					"type": "button",
+					"text": "Open",
+					"top": 312,
+					"left": 304,
+					"width": 58,
+					"height": 24
+				},
+				"close": {
+					"type": "button",
+					"text": "Close",
+					"top": 312,
+					"left": 368,
+					"width": 58,
+					"height": 24
+				},
+				"dropBaud": {
+					"type": "dropdown",
+					"dataSource": "Form.dropBaud",
+					"dataSourceTypeHint": "object",
+					"top": 342,
+					"left": 32,
+					"width": 90,
+					"height": 22
+				},
+				"dropDataBits": {
+					"type": "dropdown",
+					"dataSource": "Form.dropDataBits",
+					"dataSourceTypeHint": "object",
+					"top": 342,
+					"left": 128,
+					"width": 62,
+					"height": 22
+				},
+				"dropParity": {
+					"type": "dropdown",
+					"dataSource": "Form.dropParity",
+					"dataSourceTypeHint": "object",
+					"top": 342,
+					"left": 196,
+					"width": 86,
+					"height": 22
+				},
+				"dropStopBits": {
+					"type": "dropdown",
+					"dataSource": "Form.dropStopBits",
+					"dataSourceTypeHint": "object",
+					"top": 342,
+					"left": 288,
+					"width": 90,
+					"height": 22
+				},
+				"grpFail": {
+					"type": "groupBox",
+					"text": "Failure showcase — each one keeps the session alive",
+					"top": 408,
+					"left": 16,
+					"width": 424,
+					"height": 124
+				},
+				"failMissing": {
+					"type": "button",
+					"text": "Open missing path",
+					"top": 432,
+					"left": 32,
+					"width": 180,
+					"height": 22
+				},
+				"failConnection": {
+					"type": "button",
+					"text": "Unknown connection",
+					"top": 432,
+					"left": 216,
+					"width": 196,
+					"height": 22
+				},
+				"failBaud": {
+					"type": "button",
+					"text": "Configure baudRate 0",
+					"top": 460,
+					"left": 32,
+					"width": 180,
+					"height": 22
+				},
+				"failOversize": {
+					"type": "button",
+					"text": "Write 40 000 bytes",
+					"top": 460,
+					"left": 216,
+					"width": 196,
+					"height": 22
+				},
+				"failCancel": {
+					"type": "button",
+					"text": "Cancel unknown request",
+					"top": 488,
+					"left": 32,
+					"width": 180,
+					"height": 22
+				},
+				"forget": {
+					"type": "button",
+					"text": "Forget session",
+					"top": 488,
+					"left": 216,
+					"width": 140,
+					"height": 22
+				},
+				"grpDevice": {
+					"type": "groupBox",
+					"text": "Virtual device transcript",
+					"top": 540,
+					"left": 16,
+					"width": 424,
+					"height": 180
+				},
+				"deviceList": {
+					"type": "listbox",
+					"listboxType": "collection",
+					"dataSource": "Form.deviceLines",
+					"resizingMode": "legacy",
+					"verticalAlign": "middle",
+					"rowHeight": "18px",
+					"top": 564,
+					"left": 32,
+					"width": 392,
+					"height": 140,
+					"columns": [
+						{
+							"name": "text",
+							"dataSource": "This.text",
+							"width": 392,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "textHeader",
+								"text": "Output"
+							},
+							"footer": {
+								"name": "textFooter",
+								"truncateMode": "none"
+							}
+						}
+					]
+				},
+				"grpSend": {
+					"type": "groupBox",
+					"text": "Send",
+					"top": 112,
+					"left": 456,
+					"width": 528,
+					"height": 160
+				},
+				"inSend": {
+					"type": "input",
+					"dataSource": "Form.sendText",
+					"dataSourceTypeHint": "text",
+					"top": 136,
+					"left": 472,
+					"width": 300,
+					"height": 22
+				},
+				"send": {
+					"type": "button",
+					"text": "Send text",
+					"top": 136,
+					"left": 780,
+					"width": 80,
+					"height": 22
+				},
+				"sendhex": {
+					"type": "button",
+					"text": "Send hex",
+					"top": 136,
+					"left": 868,
+					"width": 84,
+					"height": 22
+				},
+				"ping": {
+					"type": "button",
+					"text": "PING",
+					"top": 168,
+					"left": 472,
+					"width": 64,
+					"height": 22
+				},
+				"read": {
+					"type": "button",
+					"text": "READ",
+					"top": 168,
+					"left": 544,
+					"width": 60,
+					"height": 22
+				},
+				"kanji": {
+					"type": "button",
+					"text": "KANJI",
+					"top": 168,
+					"left": 612,
+					"width": 68,
+					"height": 22
+				},
+				"bin": {
+					"type": "button",
+					"text": "BIN",
+					"top": 168,
+					"left": 688,
+					"width": 50,
+					"height": 22
+				},
+				"stream": {
+					"type": "button",
+					"text": "STREAM",
+					"top": 168,
+					"left": 746,
+					"width": 70,
+					"height": 22
+				},
+				"stall": {
+					"type": "button",
+					"text": "STALL",
+					"top": 168,
+					"left": 824,
+					"width": 60,
+					"height": 22
+				},
+				"sendHint": {
+					"type": "text",
+					"text": "Presets are simulator commands. Hex mode accepts \"50 49 4E 47 0D\" or \"50494E470D\".",
+					"top": 196,
+					"left": 472,
+					"width": 480,
+					"height": 18,
+					"fontSize": 12
+				},
+				"grpReceive": {
+					"type": "groupBox",
+					"text": "Receive",
+					"top": 280,
+					"left": 456,
+					"width": 528,
+					"height": 224
+				},
+				"rxText": {
+					"type": "input",
+					"dataSource": "Form.rx",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"hideFocusRing": true,
+					"borderStyle": "none",
+					"top": 304,
+					"left": 472,
+					"width": 496,
+					"height": 110,
+					"multiline": "yes",
+					"wordwrap": "normal",
+					"scrollbarVertical": "visible"
+				},
+				"chunkList": {
+					"type": "listbox",
+					"listboxType": "collection",
+					"dataSource": "Form.chunks",
+					"resizingMode": "legacy",
+					"verticalAlign": "middle",
+					"rowHeight": "18px",
+					"top": 420,
+					"left": 472,
+					"width": 496,
+					"height": 72,
+					"columns": [
+						{
+							"name": "at",
+							"dataSource": "This.at",
+							"width": 60,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "atHeader",
+								"text": "Time"
+							},
+							"footer": {
+								"name": "atFooter",
+								"truncateMode": "none"
+							}
+						},
+						{
+							"name": "direction",
+							"dataSource": "This.direction",
+							"width": 44,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "directionHeader",
+								"text": "Dir"
+							},
+							"footer": {
+								"name": "directionFooter",
+								"truncateMode": "none"
+							}
+						},
+						{
+							"name": "bytes",
+							"dataSource": "This.bytes",
+							"width": 56,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "bytesHeader",
+								"text": "Bytes"
+							},
+							"footer": {
+								"name": "bytesFooter",
+								"truncateMode": "none"
+							}
+						},
+						{
+							"name": "hex",
+							"dataSource": "This.hex",
+							"width": 336,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "hexHeader",
+								"text": "Hex"
+							},
+							"footer": {
+								"name": "hexFooter",
+								"truncateMode": "none"
+							}
+						}
+					]
+				},
+				"grpLog": {
+					"type": "groupBox",
+					"text": "Event log",
+					"top": 512,
+					"left": 456,
+					"width": 528,
+					"height": 208
+				},
+				"logList": {
+					"type": "listbox",
+					"listboxType": "collection",
+					"dataSource": "Form.log",
+					"resizingMode": "legacy",
+					"verticalAlign": "middle",
+					"rowHeight": "18px",
+					"top": 536,
+					"left": 472,
+					"width": 496,
+					"height": 168,
+					"columns": [
+						{
+							"name": "at",
+							"dataSource": "This.at",
+							"width": 62,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "atHeader",
+								"text": "Time"
+							},
+							"footer": {
+								"name": "atFooter",
+								"truncateMode": "none"
+							}
+						},
+						{
+							"name": "level",
+							"dataSource": "This.level",
+							"width": 52,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "levelHeader",
+								"text": "Level"
+							},
+							"footer": {
+								"name": "levelFooter",
+								"truncateMode": "none"
+							}
+						},
+						{
+							"name": "source",
+							"dataSource": "This.source",
+							"width": 52,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "sourceHeader",
+								"text": "Source"
+							},
+							"footer": {
+								"name": "sourceFooter",
+								"truncateMode": "none"
+							}
+						},
+						{
+							"name": "message",
+							"dataSource": "This.message",
+							"width": 330,
+							"minWidth": 40,
+							"truncateMode": "none",
+							"header": {
+								"name": "messageHeader",
+								"text": "Message"
+							},
+							"footer": {
+								"name": "messageFooter",
+								"truncateMode": "none"
+							}
+						}
+					]
+				}
+			}
+		}
+	]
+}

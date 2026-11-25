@@ -146,7 +146,17 @@ Verified against 0.1.2:
   listbox needs the object name, so dumping a form is worth a dedicated method
   (`SerialPortDemoUIDump`) rather than an inline loop.
 * Leftover helper processes are the norm: `pkill -9 -f virtual_serial.py` after
-  every run, or 30+ PTY helpers accumulate.
+  every run, or 30+ PTY helpers accumulate. Worse, the kernel reuses the freed
+  `/dev/ttysNNN`, so the next run can attach a **new** simulator and a **stale**
+  owner to the same device — the suite then reports "0 chunks were decoded"
+  while every step claims success. `tools/processes.py` reaps helpers before
+  each run; nothing else caught this reliably.
+* A dependency in **download mode** is two things, not one: the unpacked folder
+  under `.local-components/` *and* `environment4d.json` mapping the name to that
+  folder. Unpacking alone leaves `Dependency '…' cannot be found`. Also, a
+  naive `zipfile.extract` drops the ZIP's permission bits, so the bundled CLI
+  stops being executable and every session fails with `POSIX 13` — restore the
+  modes from the archive entries.
 
 ## 8. What is **not** verified here
 

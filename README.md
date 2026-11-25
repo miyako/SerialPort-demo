@@ -128,6 +128,11 @@ python3 tools/run_smoke.py        # headless, tool4d, 12 cases, ~5 s
 python3 tools/run_ui_smoke.py     # opens the real window, 11 assertions, ~3 s
 ```
 
+Both runners first reap simulators left behind by an earlier, interrupted run
+(`tools/processes.py`) — a stale helper keeps the PTY alive, the kernel hands the
+next run the same `/dev/ttysNNN`, and writes vanish into a device nobody reads
+while every step still reports success.
+
 `run_smoke.py` starts tool4d with `--startup-method=SerialPortDemoTest`; the
 tests live in `SerialPortDemoTestWorker`. `run_ui_smoke.py` launches the full
 application with `--startup-method=SerialPortDemoUIRun`, and
@@ -160,6 +165,7 @@ Project/Sources/Methods/          UI actions, worker, poll/apply, harness entrie
 Project/Sources/Classes/          VirtualSerialDevice (PTY + SystemWorker), decoder
 Project/Sources/Forms/Main/       the window
 tools/resolve_dependency.py       download the pinned component without the IDE
+tools/processes.py                reap leftover PTY helpers before a run
 tools/virtual-serial/             the PTY simulator
 tools/run_smoke.py                headless suite
 tools/run_ui_smoke.py             window suite

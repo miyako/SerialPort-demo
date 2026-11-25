@@ -31,6 +31,7 @@ REPO = Path(__file__).resolve().parent.parent
 PROJECT = REPO / "Project" / "SerialPort-demo.4DProject"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import processes  # noqa: E402  (needs the path above)
 import resolve_dependency  # noqa: E402  (needs the path above)
 
 # 4D writes reliably inside the project folder, while writes to /tmp can be
@@ -74,6 +75,10 @@ def main() -> int:
     if not resolve_dependency.ensure(REPO):
         print("the SerialPort dependency could not be resolved", file=sys.stderr)
         return 1
+
+    # A run killed mid-flight leaves its PTY helper holding the device; the
+    # next run reuses the same /dev/ttysNNN and silently talks to nobody.
+    processes.reap_simulators(REPO)
 
     for leftover in (STATUS, REPORT, FORM_DUMP, TRACE, MID_DUMP, END_DUMP):
         if leftover.exists():

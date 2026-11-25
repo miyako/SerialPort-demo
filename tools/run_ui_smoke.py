@@ -30,6 +30,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 PROJECT = REPO / "Project" / "SerialPort-demo.4DProject"
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import resolve_dependency  # noqa: E402  (needs the path above)
+
 # 4D writes reliably inside the project folder, while writes to /tmp can be
 # refused silently by the macOS sandbox, so every artefact stays here.
 STATUS = REPO / "demo-ui-status.json"
@@ -67,6 +70,10 @@ def fourd_binary(argument: str) -> Path:
 def main() -> int:
     args = parse_args()
     binary = fourd_binary(args.fourd)
+
+    if not resolve_dependency.ensure(REPO):
+        print("the SerialPort dependency could not be resolved", file=sys.stderr)
+        return 1
 
     for leftover in (STATUS, REPORT, FORM_DUMP, TRACE, MID_DUMP, END_DUMP):
         if leftover.exists():

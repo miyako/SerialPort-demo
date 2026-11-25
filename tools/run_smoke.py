@@ -25,6 +25,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 PROJECT = REPO / "Project" / "SerialPort-demo.4DProject"
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import resolve_dependency  # noqa: E402  (needs the path above)
 SIMULATOR = REPO / "tools" / "virtual-serial" / "virtual_serial.py"
 INPUT = REPO / "demo-test-input.json"
 REPORT = REPO / "demo-test-report.json"
@@ -93,6 +96,12 @@ class Device:
 def main() -> int:
     args = parse_args()
     binary = tool4d_binary(args.tool4d)
+
+    # A fresh clone has no resolved component yet: tool4d only reads what the
+    # Dependency manager already put in .local-components.
+    if not resolve_dependency.ensure(REPO):
+        print("the SerialPort dependency could not be resolved", file=sys.stderr)
+        return 1
 
     if REPORT.exists():
         REPORT.unlink()

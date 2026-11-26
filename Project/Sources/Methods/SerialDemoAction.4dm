@@ -147,6 +147,10 @@ Case of
 		SerialDemoDeviceChanged
 
 	: ($action="quit")
+		// The helper process outlives the window unless it is stopped here.
+		If (OB Instance of(Form.device; cs.VirtualSerialDevice))
+			$result:=Form.device.stop()
+		End if
 		QUIT 4D
 
 	Else

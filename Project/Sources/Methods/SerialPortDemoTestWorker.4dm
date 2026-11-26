@@ -160,6 +160,17 @@ $detail.phase:=$status.phase
 $detail.exitCode:=$report.exitCode
 SerialPortDemoTestCheck($report; "shutdown terminates the session cleanly"; ((String($status.phase)="terminated") & ($report.exitCode=0)); $detail)
 
+/*  Restart ------------------------------------------------------------------
+    A session that has ended must not block the next one: "start" used to be
+    refused with session_exists until the worker was restarted. */
+$report.phase:="restart"
+CALL WORKER(SERIAL_TestSession; "SerialDemoWorker"; "start"; New object("target"; "macOS-universal"))
+$status:=SerialPortDemoTestAwait($statusFile; "running"; 0; 0; 0; ""; 300)
+$detail:=New object("phase"; $status.phase)
+SerialPortDemoTestCheck($report; "a session can be started again after shutdown"; (String($status.phase)="running"); $detail)
+CALL WORKER(SERIAL_TestSession; "SerialDemoWorker"; "shutdown"; New object)
+$status:=SerialPortDemoTestAwait($statusFile; "terminated"; 0; 0; 0; ""; 400)
+
 $report.finished:=True
 $report.finishedAt:=Timestamp
 File($reportPath; fk posix path).setText(JSON Stringify($report))

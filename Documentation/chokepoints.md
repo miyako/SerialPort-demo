@@ -59,10 +59,18 @@ removing an applied message from the outbox.
 `Value type($message)#Is object` before reading fields: a message can be a
 scalar.
 
-### `Error description` does not exist
-An error handler that reads `Error description` fails to compile and takes the
-whole run with it (no report, no log). Use `Error formula`, `Error method`,
-`Error line`, `Error code`.
+### `Error description` and `Error code` do not exist, and a handler gets no arguments
+Neither name is a 4D command. They compile (the compiler reads them as
+undeclared variables) and evaluate to empty, so a handler built on them reports
+nothing. Read the failure from `Last errors` — a collection whose first entry
+has `errCode` and `message` — plus `Error method` and `Error line`.
+
+An error handler is also called **without parameters**: a guard such as
+`#DECLARE($errorType : Integer)` followed by `If ($errorType=2)` is never true
+and turns the handler into dead code. And a handler that itself fails calls
+itself again until 4D reports "Stack is full": clear the handler first
+(`ON ERR CALL(""; ek local)`) and do not touch `Form` from it — outside a window
+`Form` is an empty object, not Null.
 
 ## 3. Paths — three different conventions in one call chain
 

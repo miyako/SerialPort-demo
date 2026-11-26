@@ -52,6 +52,10 @@ Case of
 		SerialDemoStatus
 
 	: ($command="start")
+		// An ended session (terminated, failed) is garbage, not a live one.
+		If ((SERIAL_State.phase="terminated") | (SERIAL_State.phase="failed"))
+			SERIAL_Session:=Null
+		End if
 		If (SERIAL_Session#Null)
 			SerialDemoNotify(New object("kind"; "error"; "error"; New object("code"; "session_exists"; "message"; "A session already exists; shut it down first")))
 		Else
@@ -67,6 +71,8 @@ Case of
 			Else
 				SERIAL_State.phase:="failed"
 				SerialDemoNotify(New object("kind"; "error"; "error"; $result.error))
+				// A session that never started must not block the next attempt.
+				SERIAL_Session:=Null
 			End if
 			SerialDemoStatus
 		End if
@@ -103,7 +109,9 @@ Case of
 		SerialDemoStatus
 
 	: ($command="forget")
-		// Drop a session that has already ended so the demo can start again.
+		// Drop a session that has already ended so the demo can start again:
+		// "start" refuses while a session object is still held.
+		SERIAL_Session:=Null
 		SERIAL_State.phase:="idle"
 		SERIAL_State.target:=""
 		SERIAL_State.startedAt:=""

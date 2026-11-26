@@ -42,6 +42,7 @@ FORM_DUMP = REPO / "demo-ui-report.json.end.json"
 TRACE = REPO / "demo-ui-report.json.trace.txt"
 MID_DUMP = REPO / "demo-ui-report.json.mid.json"
 END_DUMP = REPO / "demo-ui-report.json.end.json"
+PROBE = REPO / "demo-ui-report.json.probe.json"
 
 
 def parse_args() -> argparse.Namespace:
@@ -80,7 +81,7 @@ def main() -> int:
     # next run reuses the same /dev/ttysNNN and silently talks to nobody.
     processes.reap_simulators(REPO)
 
-    for leftover in (STATUS, REPORT, FORM_DUMP, TRACE, MID_DUMP, END_DUMP):
+    for leftover in (STATUS, REPORT, FORM_DUMP, TRACE, MID_DUMP, END_DUMP, PROBE):
         if leftover.exists():
             leftover.unlink()
 
@@ -156,7 +157,7 @@ def main() -> int:
         return 1
 
     if not args.keep_files:
-        for leftover in (STATUS, REPORT, FORM_DUMP, TRACE, MID_DUMP, END_DUMP):
+        for leftover in (STATUS, REPORT, FORM_DUMP, TRACE, MID_DUMP, END_DUMP, PROBE):
             if leftover.exists():
                 leftover.unlink()
     return 0

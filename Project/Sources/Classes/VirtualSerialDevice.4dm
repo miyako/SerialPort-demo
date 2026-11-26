@@ -56,7 +56,8 @@ Function quote($argument : Text)->$quoted : Text
 Function start($script : 4D.File)->$result : Object
 	var $command; $path : Text
 	var $previous : Text
-	If (This.state#"stopped")
+	// A failed or exited device is as good as stopped: it can be started again.
+	If ((This.state#"stopped") & (This.state#"failed"))
 		return New object("ok"; False; "error"; New object("code"; "already_running"; "message"; "The virtual device is already running"))
 	End if
 	If (Not($script.exists))
@@ -77,12 +78,23 @@ Function start($script : 4D.File)->$result : Object
 	ON ERR CALL($previous; ek local)
 	If (This.worker=Null)
 		This.state:="failed"
-		This.errorText:=String(Error code)+" "+Error description
-			return New object("ok"; False; "error"; New object("code"; "launch_failed"; "message"; This.errorText))
+		This.errorText:=This.lastErrorText()
+		return New object("ok"; False; "error"; New object("code"; "launch_failed"; "message"; This.errorText))
 	End if
 	This.state:="starting"
 	This.transcript:=[]
 	return New object("ok"; True; "state"; This.state)
+
+/*  Text of the failure that just happened. "Error description" is not a 4D
+    command; the message is in Last errors.
+*/
+Function lastErrorText()->$text : Text
+	$text:=""
+	If (Last errors#Null)
+		If (Last errors.length>0)
+			$text:=String(Last errors[0].errCode)+" "+String(Last errors[0].message)
+		End if
+	End if
 
 /*  SystemWorker callbacks. They run in the process that created the worker,
     after that process returns to its event loop.
@@ -105,6 +117,23 @@ Function onData($worker : Object; $info : Object)
 
 Function onResponse($worker : Object; $info : Object)
 	// Not used: the simulator writes diagnostics to stderr only.
+
+/*  The helper process ended without stop() having been called (it crashed, or
+    was killed). Without this the window keeps offering a device path that
+    nobody serves. A worker that stop() already released no longer matches
+    This.worker, so a late callback cannot clobber a device started since.
+*/
+Function onTerminate($worker : Object; $info : Object)
+	If (This.worker=Null)
+		return
+	End if
+	If ($worker.pid#This.worker.pid)
+		return
+	End if
+	This.worker:=Null
+	This.state:="stopped"
+	This.port:=""
+	This.transcript.push("device process exited")
 
 Function receive($line : Text)
 	If ($line="")

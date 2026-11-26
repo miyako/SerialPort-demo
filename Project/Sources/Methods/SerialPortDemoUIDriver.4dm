@@ -30,6 +30,13 @@ $probePath:=$reportPath+".probe.json"
 $probeFile:=File($probePath; fk posix path)
 $dumpFile:=File($endDumpPath; fk posix path)
 
+// A probe left by an earlier run still names that run's PTY. Waiting for the
+// path with it in place returns at once, and "open" is dispatched before the
+// device of this run has announced anything.
+If ($probeFile.exists)
+	$probeFile.delete()
+End if
+
 $report:=New object("finished"; False; "success"; True; "phase"; "driving"; "cases"; New collection; "trace"; New collection)
 SerialPortDemoTrace("driver started")
 
@@ -161,6 +168,11 @@ $report.phase:="done"
 $report.finished:=True
 SerialPortDemoWriteReport($reportFile; $report)
 SerialPortDemoTrace("driver finished; success="+String($report.success))
+
+// Quitting does not necessarily unload the form, and an unreleased SystemWorker
+// leaves its simulator running: stop the device explicitly.
+SerialPortDemoUIDrive($window; "deviceStop"; $report; $reportFile)
+DELAY PROCESS(Current process; 30)
 
 If ($report.success)
 	QUIT 4D(0)

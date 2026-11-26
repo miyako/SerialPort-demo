@@ -11,7 +11,7 @@
 
 var SERIAL_State : Object
 var SERIAL_StatusFile : 4D.File
-var $entry; $decoded; $decoder : Object
+var $entry; $decoded; $decoder; $notice : Object
 var $bytes : Blob
 var $name; $connection : Text
 var $keys : Collection

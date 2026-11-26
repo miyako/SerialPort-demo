@@ -3,19 +3,26 @@
 
     Installed only around risky calls with ek local, and restored immediately,
     so a failure in one demo action is reported instead of stopping the worker.
+
+    A handler receives no parameters, and "Error description" is not a 4D
+    command (it compiles as an undeclared variable and stays empty): the text
+    of the failure is the first entry of Last errors.
 */
-#DECLARE($errorType : Integer)
+#DECLARE()
 
-var $entry : Object
+var $entry; $last : Object
 
-If ($errorType=2)
-	$entry:=New object("code"; String(Error code); "message"; Error description; "method"; Error method; "line"; Error line)
-	If (Value type(Form)=Is object)
-		If (Value type(Form.lastError)=Is object)
-			Form.lastError:=$entry
-			Form.errorText:=JSON Stringify($entry; *)
-		End if
+// A failure inside the handler must not call the handler again (4D answers with
+// "Stack is full"). Form is not usable here either: outside a window it is an
+// empty object, so the handler only reports and never writes form state.
+ON ERR CALL(""; ek local)
+
+$last:=New object("errCode"; 0; "message"; "")
+If (Last errors#Null)
+	If (Last errors.length>0)
+		$last:=Last errors[0]
 	End if
-	// Visible in a headless run (tool4d writes this to its console).
-	LOG EVENT(Into system standard outputs; "4D error "+$entry.code+" in "+$entry.method+":"+String($entry.line)+" — "+$entry.message)
 End if
+$entry:=New object("code"; String($last.errCode); "message"; String($last.message); "method"; Error method; "line"; Error line)
+// Visible in a headless run (tool4d writes this to its console).
+LOG EVENT(Into system standard outputs; "4D error "+$entry.code+" in "+$entry.method+":"+String($entry.line)+" — "+$entry.message)

@@ -9,7 +9,7 @@
 
 var SERIAL_Session : cs.Serial.SerialPort
 var SERIAL_State : Object
-var $result : Object
+var $result; $entry : Object
 var $size : Integer
 
 If (SERIAL_Session=Null)

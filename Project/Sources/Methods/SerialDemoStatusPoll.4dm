@@ -19,6 +19,9 @@ If (SERIAL_StatusPath="")
 End if 
 
 $file:=File(SERIAL_StatusPath; fk posix path)
+If ($file=Null)
+	return 
+End if 
 If (Not($file.exists))
 	return 
 End if 

@@ -124,7 +124,7 @@ that failed and what they taught.
 Two harnesses, both using the simulator, so they need no hardware:
 
 ```sh
-python3 tools/run_smoke.py        # headless, tool4d, 13 cases, ~5 s
+python3 tools/run_smoke.py        # headless, tool4d, 14 cases, ~5 s
 python3 tools/run_ui_smoke.py     # opens the real window, 11 assertions, ~3 s
 ```
 
@@ -144,7 +144,7 @@ Verification actually performed here (arm64 macOS):
 
 | check | result |
 | --- | --- |
-| headless suite, tool4d 21R4 (100224) | **13/13 passed**, 4.7 s |
+| headless suite, tool4d 21R4 (100224) | **14/14 passed**, 4.7 s |
 | window suite, 4D 21 R5 (100175) | **11/11 passed**, 2.9 s |
 | dependency resolved in download mode | passed (IDE-resolved, and re-resolved from a fresh clone by `tools/resolve_dependency.py`) |
 | Windows x64 / Intel macOS 4D | **not run** — no runtime available here |

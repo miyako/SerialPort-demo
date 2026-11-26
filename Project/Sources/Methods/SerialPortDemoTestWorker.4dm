@@ -171,6 +171,15 @@ SerialPortDemoTestCheck($report; "a session can be started again after shutdown"
 CALL WORKER(SERIAL_TestSession; "SerialDemoWorker"; "shutdown"; New object)
 $status:=SerialPortDemoTestAwait($statusFile; "terminated"; 0; 0; 0; ""; 400)
 
+/*  The status document of an interactive start ---------------------------- */
+// The window's own startup builds this path; the harness passes its own, so
+// without this check a broken path only shows when a person opens the app.
+var $statusDoc; $roundTrip : 4D.File
+$statusDoc:=SerialDemoStatusFile
+$roundTrip:=File(Convert path system to POSIX($statusDoc.platformPath); fk posix path)
+$detail:=New object("platform"; $statusDoc.platformPath)
+SerialPortDemoTestCheck($report; "the interactive status document path resolves and its folder exists"; (($roundTrip#Null) & $statusDoc.parent.exists); $detail)
+
 $report.finished:=True
 $report.finishedAt:=Timestamp
 File($reportPath; fk posix path).setText(JSON Stringify($report))

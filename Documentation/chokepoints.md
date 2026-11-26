@@ -93,6 +93,16 @@ Two traps found here:
 script path is built with `File(...; fk posix path).platformPath` → converted,
 never string-concatenated from an HFS folder.
 
+
+### `Folder(fk database folder)` is the safe start, and `.path` is not POSIX
+`Folder(fk database folder)` needs no path conversion. Its `.path` is a
+4D-relative `/PACKAGE/...` string: `File(.path; fk posix path)` does not reach the
+file. Derive the POSIX path with `Convert path system to POSIX(.platformPath)`,
+and create the `Logs` folder before writing into it. The headless and window
+harnesses pass their own status path, so they never ran this code: the first
+person to open the app got `Undefined Object` dialogs. The headless suite now
+checks `SerialDemoStatusFile`, the method the real startup uses.
+
 ## 4. Timers, ticks and an unattended app
 
 * In an unattended (background) application macOS stretches form timers: a

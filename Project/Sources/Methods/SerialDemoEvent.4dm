@@ -92,7 +92,7 @@ Case of
 		End if
 		SerialDemoNotify(New object("kind"; "chunk"; "connection"; $connection; "decoded"; $decoded))
 		// An external observer follows the counters, so a chunk refreshes them.
-		If (Value type(SERIAL_StatusFile)=Is object)
+		If (SERIAL_StatusFile#Null)
 			SerialDemoStatus
 		End if
 

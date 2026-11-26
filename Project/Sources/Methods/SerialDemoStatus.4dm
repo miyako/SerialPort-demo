@@ -7,6 +7,7 @@
 */
 #DECLARE()
 
+var SERIAL_StatusFile : 4D.File
 var $status : Object
 
 If (OB Keys(SERIAL_State).length=0)
@@ -26,7 +27,7 @@ $status.lastExit:=SERIAL_State.lastExit
 $status.seq:=SERIAL_State.seq
 $status.outbox:=SERIAL_State.outbox.copy()
 
-If (Value type(SERIAL_StatusFile)=Is object)
+If (SERIAL_StatusFile#Null)
 	// Best effort: a failing observer file must never break the session.
 	SERIAL_StatusFile.setText(JSON Stringify($status))
 End if

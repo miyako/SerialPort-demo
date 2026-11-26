@@ -49,6 +49,9 @@ Case of
 		// session through this file while the window is not open. File objects
 		// cannot cross a CALL WORKER boundary, so only the path travels.
 		SERIAL_StatusFile:=File(String($payload.path); fk posix path)
+		If (SERIAL_StatusFile=Null)
+			SerialDemoNotify(New object("kind"; "error"; "error"; New object("code"; "bad_status_path"; "message"; "Not a POSIX path: "+String($payload.path))))
+		End if
 		SerialDemoStatus
 
 	: ($command="start")

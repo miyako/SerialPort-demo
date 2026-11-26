@@ -157,9 +157,20 @@ behaviour, component limits — is written up in
 [Documentation/chokepoints.md](Documentation/chokepoints.md). It is the part
 worth reading if you plan to build another CLI-backed component.
 
+## Development skills
+
+The 4D conventions used while building and fixing this project come from
+[`miyako/skills`](https://github.com/miyako/skills), mounted as the `.agents`
+git submodule (branch `dist`). Pinned version: **0.1.2**, commit `3abcde4`.
+
+```sh
+git submodule update --init   # fetch the pinned skills
+```
+
 ## Layout
 
 ```
+.agents/                          4D development skills (submodule, miyako/skills 0.1.2)
 Project/SerialPort-demo.4DProject
 Project/Sources/Methods/          UI actions, worker, poll/apply, harness entries
 Project/Sources/Classes/          VirtualSerialDevice (PTY + SystemWorker), decoder
